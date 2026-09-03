@@ -16,7 +16,7 @@ const fragmentMono = Fragment_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vijay — Creative Developer",
+  title: "Vijay — Full Stack Developer",
   description:
     "Personal portfolio of Vijay, a creative developer crafting premium digital experiences.",
 };
