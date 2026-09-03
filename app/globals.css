@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+/* ── Design Tokens ────────────────────────────────────────── */
+:root {
+  --void: #030304;
+  --ink: #0b0a10;
+  --violet-core: #7c3aed;
+  --hot-violet: #a855f7;
+  --cold-silver: #c9c5d0;
+  --text: #f6f2ff;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --font-sans: var(--font-instrument-sans);
+  --font-mono: var(--font-fragment-mono);
+}
+
+/* ── Base Reset ───────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--void);
+  color: var(--text);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  background: var(--void);
+  min-height: 100svh;
+  overflow-x: hidden;
+}
+
+/* ── Visually Hidden (a11y) ───────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Small Labels ─────────────────────────────────────────── */
+.label {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cold-silver) 64%, transparent);
+  line-height: 1;
+}
+
+/* ── Link Focus Ring ──────────────────────────────────────── */
+a:focus-visible,
+button:focus-visible {
+  outline: 1.5px solid var(--hot-violet);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ── Nav Underline Wipe ───────────────────────────────────── */
+.nav-link {
+  position: relative;
+  display: inline-block;
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0.25rem;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--violet-core);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* ── Hero Entrance ────────────────────────────────────────── */
+@keyframes hero-portrait-in {
+  from {
+    opacity: 0;
+    transform: scale(1.035);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes hero-chrome-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.hero-portrait-enter {
+  animation: hero-portrait-in 1.1s var(--ease-out-expo) forwards;
+}
+
+.hero-chrome-enter {
+  opacity: 0;
+  animation: hero-chrome-in 0.8s var(--ease-out-expo) 0.4s forwards;
+}
+
+/* ── Ticker / Marquee Animation ────────────────────────────── */
+@keyframes marquee-flow {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-container {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-flow 40s linear infinite;
+  will-change: transform;
+}
+
+/* ── Reduced Motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-portrait-enter,
+  .hero-chrome-enter {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .nav-link::after {
+    transition: none;
+  }
+
+  .marquee-track {
+    animation: none;
+  }
+}
