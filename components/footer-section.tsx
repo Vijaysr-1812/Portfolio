@@ -45,7 +45,7 @@ function LinkedinIcon(props: React.SVGProps<SVGSVGElement>) {
 
 export function FooterSection() {
   const [copied, setCopied] = useState(false);
-  const email = "vijay@example.com";
+  const email = "vijaysr2003@gmail.com";
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(email);
