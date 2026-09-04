@@ -1,0 +1,22 @@
+{
+  "entries": [
+    { "path": "skills/framer-motion" },
+    { "path": "skills/lucide-react" },
+    { "path": "skills/tailwind-v4" },
+    { "path": "skills/radix-ui" },
+    { "path": "skills/ui-ux-utilities" },
+    { "path": "skills/next-themes" },
+    { "path": "skills/sonner" },
+    { "path": "skills/shadcn-ui" },
+    { "path": "skills/composition-patterns" },
+    { "path": "skills/deploy-to-vercel" },
+    { "path": "skills/playwright-cli" },
+    { "path": "skills/react-best-practices" },
+    { "path": "skills/react-native-skills" },
+    { "path": "skills/react-view-transitions" },
+    { "path": "skills/vercel-cli-with-tokens" },
+    { "path": "skills/vercel-optimize" },
+    { "path": "skills/web-design-guidelines" },
+    { "path": "skills/writing-guidelines" }
+  ]
+}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Sans, Fragment_Mono } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const instrumentSans = Instrument_Sans({
@@ -16,9 +17,9 @@ const fragmentMono = Fragment_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vijay — Full Stack Developer",
+  title: "Kavana Srinivasa — Senior Frontend Developer & AI Solutions Engineer",
   description:
-    "Personal portfolio of Vijay, a creative developer crafting premium digital experiences.",
+    "Portfolio of Kavana Srinivasa, accomplished Senior Frontend Developer with 5+ years of experience in Angular, React, TypeScript, and AI-powered chatbot solutions.",
 };
 
 export default function RootLayout({
@@ -27,9 +28,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${instrumentSans.variable} ${fragmentMono.variable}`}
+      className={`${instrumentSans.variable} ${fragmentMono.variable} scroll-smooth`}
     >
-      <body>{children}</body>
+      <body className="bg-[#0b0c0e] text-[#f4f4f7] antialiased selection:bg-amber-500/30 selection:text-amber-200">
+        {children}
+        <Toaster position="bottom-right" richColors theme="dark" />
+      </body>
     </html>
   );
 }

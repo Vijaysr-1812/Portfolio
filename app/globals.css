@@ -1,19 +1,25 @@
 @import "tailwindcss";
 
-/* ── Design Tokens ────────────────────────────────────────── */
-:root {
-  --void: #030304;
-  --ink: #0b0a10;
-  --violet-core: #7c3aed;
-  --hot-violet: #a855f7;
-  --cold-silver: #c9c5d0;
-  --text: #f6f2ff;
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --font-sans: var(--font-instrument-sans);
-  --font-mono: var(--font-fragment-mono);
+@layer base {
+  :root {
+    --bg-main: #0b0c0e;
+    --bg-surface: #12141a;
+    --bg-surface-hover: #181b24;
+    --bg-card: #14161f;
+    --border-subtle: #222532;
+    --border-accent: rgba(245, 158, 11, 0.3);
+    
+    --text-primary: #f4f4f7;
+    --text-secondary: #9ea3b5;
+    --text-muted: #656a7d;
+    
+    --accent-gold: #f59e0b;
+    --accent-amber: #d97706;
+    --accent-light: #fbbf24;
+    --accent-glow: rgba(245, 158, 11, 0.15);
+  }
 }
 
-/* ── Base Reset ───────────────────────────────────────────── */
 *,
 *::before,
 *::after {
@@ -23,150 +29,83 @@
 }
 
 html {
-  background: var(--void);
-  color: var(--text);
+  background-color: var(--bg-main);
+  color: var(--text-primary);
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
 
 body {
-  font-family: var(--font-sans), system-ui, sans-serif;
-  background: var(--void);
-  min-height: 100svh;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* ── Visually Hidden (a11y) ───────────────────────────────── */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #090a0d;
+}
+::-webkit-scrollbar-thumb {
+  background: #252834;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-amber);
 }
 
-/* ── Small Labels ─────────────────────────────────────────── */
-.label {
+/* Selection */
+::selection {
+  background: rgba(245, 158, 11, 0.25);
+  color: #fef08a;
+}
+
+/* Typography Helpers */
+.font-mono-code {
   font-family: var(--font-mono), monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--cold-silver) 64%, transparent);
-  line-height: 1;
 }
 
-/* ── Link Focus Ring ──────────────────────────────────────── */
-a:focus-visible,
-button:focus-visible {
-  outline: 1.5px solid var(--hot-violet);
-  outline-offset: 3px;
-  border-radius: 2px;
+.text-gold-gradient {
+  background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #d97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* ── Nav Underline Wipe ───────────────────────────────────── */
-.nav-link {
-  position: relative;
-  display: inline-block;
-  min-height: 44px;
-  min-width: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 0;
+.bg-glass {
+  background: rgba(18, 20, 26, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
-.nav-link::after {
-  content: "";
-  position: absolute;
-  bottom: 0.25rem;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--violet-core);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.4s var(--ease-out-expo);
+.border-warm {
+  border-color: rgba(245, 158, 11, 0.15);
 }
 
-.nav-link:hover::after {
-  transform: scaleX(1);
+.hover-glow {
+  transition: all 0.3s ease;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.4);
 }
 
-/* ── Hero Entrance ────────────────────────────────────────── */
-@keyframes hero-portrait-in {
-  from {
-    opacity: 0;
-    transform: scale(1.035);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+/* Ticker Marquee */
+@keyframes flow-left {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
 }
 
-@keyframes hero-chrome-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.hero-portrait-enter {
-  animation: hero-portrait-in 1.1s var(--ease-out-expo) forwards;
-}
-
-.hero-chrome-enter {
-  opacity: 0;
-  animation: hero-chrome-in 0.8s var(--ease-out-expo) 0.4s forwards;
-}
-
-/* ── Ticker / Marquee Animation ────────────────────────────── */
-@keyframes marquee-flow {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.marquee-container {
-  display: flex;
-  overflow: hidden;
-  user-select: none;
-  pointer-events: none;
-  white-space: nowrap;
-}
-
-.marquee-track {
+.animate-marquee {
   display: flex;
   width: max-content;
-  animation: marquee-flow 40s linear infinite;
-  will-change: transform;
+  animation: flow-left 30s linear infinite;
 }
 
-/* ── Reduced Motion ───────────────────────────────────────── */
-@media (prefers-reduced-motion: reduce) {
-  .hero-portrait-enter,
-  .hero-chrome-enter {
-    animation: none;
-    opacity: 1;
-    transform: none;
-  }
-
-  .nav-link::after {
-    transition: none;
-  }
-
-  .marquee-track {
-    animation: none;
-  }
+.animate-marquee:hover {
+  animation-play-state: paused;
 }

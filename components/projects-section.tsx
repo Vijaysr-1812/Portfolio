@@ -1,143 +1,313 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ProjectHoverCard } from "@/components/ui/card-7";
-import { Code2, BrainCircuit, TrendingUp, BotMessageSquare, ShieldCheck } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ExternalLink,
+  Bot,
+  Layers,
+  Sparkles,
+  ArrowUpRight,
+  Filter,
+  Check,
+  X,
+  Code2,
+  Cpu,
+} from "lucide-react";
 
-const PROJECTS = [
+interface Project {
+  id: string;
+  title: string;
+  category: "AI & Frontend" | "Angular Systems" | "Data & APIs";
+  description: string;
+  metrics: string;
+  tags: string[];
+  features: string[];
+  longDescription: string;
+}
+
+const PROJECTS: Project[] = [
   {
-    title: "Ragnorok",
-    category: "FULL STACK PLATFORM",
-    overview:
-      "Gamified full-stack Python learning platform featuring RPG-style coding challenges with in-browser execution via Pyodide. Engineered user progression, classroom management, and 3D interfaces with Next.js, Prisma, Supabase, and Three.js.",
-    imageUrl: "/images/ragnorok-cover.png",
-    link: "https://ragonorok.vercel.app/",
-    linkText: "Visit Website",
-    logo: <Code2 className="h-5 w-5 text-purple-400" />,
-    techStack: ["Next.js", "TypeScript", "Pyodide", "Supabase", "Three.js"],
+    id: "ai-chatbot",
+    title: "AI-Powered Customer Chatbot Automation",
+    category: "AI & Frontend",
+    description:
+      "Enterprise chatbot automation platform built with Angular 17, React 19, and Azure AI prompt engineering.",
+    metrics: "Automated 60% Customer Interactions",
+    tags: ["React 19", "Angular", "Azure AI", "Prompt Engineering", "TypeScript", "RxJS"],
+    features: [
+      "Real-time streaming response rendering and intent classification",
+      "Custom prompt engineering workflow pipelines for complex customer queries",
+      "Integrated with enterprise client web applications at Infosys",
+      "Robust fallback logic and conversation context persistence",
+    ],
+    longDescription:
+      "Engineered during Senior Associate Consultant role at Infosys to streamline customer service operations. Built with a modular React/Angular frontend architecture connecting to Azure AI services.",
   },
   {
-    title: "Viscount AI",
-    category: "AI & COMPLIANCE",
-    overview:
-      "Full-stack AI contract compliance platform to automate obligation extraction and match them against real-world operational evidence. Features vector semantic search (pgvector), real-time risk scoring, and OpenAI GPT models.",
-    imageUrl: "/images/viscount-ai-cover.png",
-    link: "https://viscountai.vercel.app/",
-    linkText: "Visit Website",
-    logo: <BrainCircuit className="h-5 w-5 text-indigo-400" />,
-    techStack: ["Next.js", "OpenAI GPT", "pgvector", "Supabase", "Tailwind"],
+    id: "angular-microfrontend",
+    title: "Enterprise Angular Micro-Frontend Suite",
+    category: "Angular Systems",
+    description:
+      "Scalable client-facing web application built from scratch with Angular 15+, Oracle DB, and Swagger APIs.",
+    metrics: "30% Error Cut • 25% Efficiency Boost",
+    tags: ["Angular 15+", "Oracle DB", "Swagger", "Jasmine/Karma", "TypeScript"],
+    features: [
+      "End-to-end UI development from initial wireframes to production release",
+      "Comprehensive Jasmine & Karma unit testing coverage across components",
+      "Integrated RESTful APIs and Swagger contract validations",
+      "Strict accessibility and cross-browser performance standards",
+    ],
+    longDescription:
+      "Led as Project Lead at Accenture. Spearheaded architecture, client engagement, and phase adherence, delivering high-performance UI components ahead of schedule.",
   },
   {
-    title: "Growth AI",
-    category: "AI FINANCIAL INTELLIGENCE",
-    overview:
-      "Real-time sentiment analysis and personalized financial advice powered by Gemini AI. Smart investing platform built with Next.js, TypeScript, and AI confidence scoring.",
-    imageUrl: "/images/growth-ai-cover.png",
-    link: "https://growth-ai-sigma.vercel.app/",
-    linkText: "Visit Website",
-    logo: <TrendingUp className="h-5 w-5 text-blue-400" />,
-    techStack: ["Next.js", "TypeScript", "Gemini AI", "Prisma", "Tailwind CSS"],
+    id: "graphql-dashboard",
+    title: "GraphQL Real-Time Analytics Dashboard",
+    category: "Data & APIs",
+    description:
+      "High-throughput data visualization dashboard with GraphQL query caching and dynamic charting.",
+    metrics: "100k+ Daily Events Rendered",
+    tags: ["React", "GraphQL", "SQL Server 2012", "Tailwind CSS", "TypeScript"],
+    features: [
+      "Optimized GraphQL query deduplication & SWR client caching",
+      "Interactive data filtering, sorting, and export capabilities",
+      "Dark mode glassmorphism UI styled with Tailwind CSS",
+      "Responsive layout for mobile and desktop viewports",
+    ],
+    longDescription:
+      "Developed to aggregate complex dataset records into clean visual widgets for enterprise stakeholders, reducing page render times significantly.",
   },
   {
-    title: "Intuiprep",
-    category: "CONVERSATIONAL AI",
-    overview:
-      "AI-powered mock interview platform enabling users to practice with AI agents, receive real-time feedback, and track progress using Next.js, shadcn/ui, Vapi.ai voice agents, and Firebase.",
-    imageUrl: "/images/intuiprep-cover.png",
-    link: "https://ai-interview-eight-chi.vercel.app/",
-    linkText: "Visit Website",
-    logo: <BotMessageSquare className="h-5 w-5 text-fuchsia-400" />,
-    techStack: ["Next.js", "Vapi.ai", "shadcn/ui", "Firebase"],
-  },
-  {
-    title: "LandChain",
-    category: "BLOCKCHAIN & SYSTEM",
-    overview:
-      "Secure blockchain system for verifying land documents and minimizing fraud. Designed a responsive UI using React & Tailwind CSS, and developed backend APIs with Express.js.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80",
-    link: "#",
-    linkText: "Explore LandChain",
-    logo: <ShieldCheck className="h-5 w-5 text-emerald-400" />,
-    techStack: ["Blockchain", "React", "Tailwind CSS", "Express.js"],
+    id: "defect-control",
+    title: "Automated QA & Defect Tracking Portal",
+    category: "Angular Systems",
+    description:
+      "Defect management and release coordination web app for tracking software testing metrics.",
+    metrics: "35% Reduction in Bug Cycles",
+    tags: ["Angular", "SQL Server", "REST APIs", "Azure DevOps", "Chakra UI"],
+    features: [
+      "Real-time bug tracking & automated escalation alerts",
+      "Client scope agreement and guideline documentation hub",
+      "Built with Agile methodologies and sprint planning tools",
+    ],
+    longDescription:
+      "Created to streamline defect identification, testing coordination, and client communication during critical deployment phases.",
   },
 ];
 
+const CATEGORIES = ["All", "AI & Frontend", "Angular Systems", "Data & APIs"] as const;
+
 export function ProjectsSection() {
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [activeModalProject, setActiveModalProject] = useState<Project | null>(null);
+
+  const filteredProjects =
+    selectedCategory === "All"
+      ? PROJECTS
+      : PROJECTS.filter((p) => p.category === selectedCategory);
+
   return (
-    <section
-      id="projects"
-      className="relative min-h-screen w-full bg-[var(--void)] text-[var(--text)] py-28 px-6 sm:px-12 lg:px-20 overflow-hidden flex flex-col justify-center items-center isolate"
-      style={{
-        borderTop: "1px solid color-mix(in srgb, var(--cold-silver) 12%, transparent)",
-      }}
-    >
-      {/* Background Glow */}
-      <div
-        className="absolute right-1/4 top-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full pointer-events-none blur-[180px] opacity-20"
-        style={{
-          background: "radial-gradient(circle, var(--hot-violet) 0%, transparent 70%)",
-        }}
-        aria-hidden="true"
-      />
+    <section id="projects" className="py-28 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto">
+      {/* Section Header with Top-Right Counter 03 */}
+      <motion.div
+        initial={{ opacity: 0, y: 25 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ amount: 0.3 }}
+        transition={{ duration: 0.6 }}
+        className="flex flex-col items-start gap-4 mb-16 relative"
+      >
+        {/* Header Top Row */}
+        <div className="flex items-center justify-between w-full border-b border-zinc-800/80 pb-6">
+          <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 px-4 py-1.5 rounded-full">
+            <span className="h-2 w-2 rounded-full bg-amber-500" />
+            <span className="font-mono text-xs tracking-[0.2em] text-amber-400 uppercase font-semibold">
+              PORTFOLIO SHOWCASE
+            </span>
+          </div>
 
-      <div className="max-w-7xl w-full flex flex-col gap-14 relative z-10">
-        {/* Header Row */}
-        <div className="relative flex items-center justify-between">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col gap-3"
-          >
-            <div className="flex items-center gap-3">
-              <span className="label font-mono tracking-widest text-xs text-[var(--hot-violet)]">
-                04 // FEATURED PROJECTS
-              </span>
-              <div className="h-px w-16 bg-gradient-to-r from-[var(--violet-core)] to-transparent opacity-60" />
-            </div>
-            <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-              Selected Works & Systems
-            </h2>
-          </motion.div>
-
-          {/* Large Outline Section Number overlay */}
-          <span
-            className="font-mono text-7xl sm:text-9xl font-extrabold select-none pointer-events-none opacity-10 leading-none"
-            style={{
-              WebkitTextStroke: "1.5px var(--cold-silver)",
-              color: "transparent",
-            }}
-          >
-            04
+          {/* Prominent Top-Right Section Counter 03 */}
+          <span className="font-mono text-4xl sm:text-6xl font-black text-amber-400/40 tracking-tighter select-none">
+            03
           </span>
         </div>
 
-        {/* ── Projects Grid using ProjectHoverCard (card-7 style with reveal button) ────── */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {PROJECTS.map((project, idx) => (
-            <motion.div
-              key={project.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: idx * 0.1 }}
-            >
-              <ProjectHoverCard
-                title={project.title}
-                category={project.category}
-                overview={project.overview}
-                imageUrl={project.imageUrl}
-                link={project.link}
-                linkText={project.linkText}
-                logo={project.logo}
-                techStack={project.techStack}
-              />
-            </motion.div>
-          ))}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 w-full pt-2">
+          <div>
+            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.1]">
+              Featured Projects & Architectures
+            </h2>
+            <p className="text-zinc-400 text-base sm:text-lg font-sans font-light mt-2">
+              Spacious project holders showcasing enterprise web apps and AI integrations.
+            </p>
+          </div>
+
+          {/* Category Filter Tabs */}
+          <div className="flex flex-wrap gap-2 bg-[#12141c] border border-zinc-800 p-1.5 rounded-xl shrink-0">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-4 py-2 rounded-lg font-mono text-xs tracking-wider transition-all focus:outline-none ${
+                  selectedCategory === cat
+                    ? "bg-amber-500 text-zinc-950 font-bold shadow-lg"
+                    : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
+      </motion.div>
+
+      {/* Projects Grid — De-cluttered Spacious Holders */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {filteredProjects.map((project, idx) => (
+          <motion.div
+            key={project.id}
+            layout
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ amount: 0.2 }}
+            transition={{ duration: 0.5, delay: idx * 0.1 }}
+            className="bg-[#12141c] border border-zinc-800/90 rounded-2xl p-8 sm:p-10 flex flex-col justify-between hover:border-amber-500/40 hover:bg-[#161824] transition-all duration-300 group shadow-2xl relative overflow-hidden"
+          >
+            {/* Ambient Background Glow */}
+            <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/5 rounded-full blur-3xl pointer-events-none group-hover:bg-amber-500/10 transition-all" />
+
+            <div>
+              {/* Category & Impact Metric Badges */}
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+                <span className="font-mono text-xs tracking-wider text-amber-400 uppercase bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-md font-semibold">
+                  {project.category}
+                </span>
+                <span className="font-mono text-xs text-zinc-300 font-semibold bg-zinc-900 border border-zinc-800 px-3 py-1 rounded-md">
+                  {project.metrics}
+                </span>
+              </div>
+
+              {/* Title */}
+              <h3 className="text-2xl font-bold text-white font-sans group-hover:text-amber-300 transition-colors mb-3 leading-snug">
+                {project.title}
+              </h3>
+
+              {/* Description */}
+              <p className="text-zinc-300 text-sm sm:text-base leading-relaxed mb-6 font-sans">
+                {project.description}
+              </p>
+
+              {/* Features List */}
+              <div className="mb-8 space-y-2.5">
+                {project.features.slice(0, 3).map((feat, i) => (
+                  <div key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-zinc-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0 mt-2" />
+                    <span className="leading-relaxed">{feat}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom Row */}
+            <div>
+              <div className="flex flex-wrap gap-2 mb-6 pt-4 border-t border-zinc-800/80">
+                {project.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="font-mono text-[10px] uppercase tracking-wider text-zinc-300 bg-zinc-900 border border-zinc-800 px-2.5 py-1 rounded"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <button
+                onClick={() => setActiveModalProject(project)}
+                className="w-full inline-flex items-center justify-center gap-2 bg-zinc-900 hover:bg-amber-500 hover:text-zinc-950 text-zinc-200 border border-zinc-800 font-mono text-xs uppercase tracking-wider py-3.5 rounded-xl transition-all font-semibold"
+              >
+                <span>VIEW ARCHITECTURE DETAILS</span>
+                <ArrowUpRight className="w-4 h-4 text-amber-400 group-hover:text-zinc-950" />
+              </button>
+            </div>
+          </motion.div>
+        ))}
       </div>
+
+      {/* Architecture Details Modal */}
+      <AnimatePresence>
+        {activeModalProject && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+            onClick={() => setActiveModalProject(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#12141c] border border-amber-500/40 p-8 sm:p-10 rounded-2xl max-w-2xl w-full shadow-2xl relative"
+            >
+              <button
+                onClick={() => setActiveModalProject(null)}
+                className="absolute top-6 right-6 p-2 text-zinc-400 hover:text-white bg-zinc-900 rounded-full border border-zinc-800"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <span className="font-mono text-xs text-amber-400 uppercase tracking-widest bg-amber-500/10 px-3 py-1 rounded inline-block mb-3">
+                {activeModalProject.category}
+              </span>
+
+              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2 font-sans">
+                {activeModalProject.title}
+              </h3>
+
+              <div className="font-mono text-xs text-amber-400 font-semibold mb-4">
+                Key Impact: {activeModalProject.metrics}
+              </div>
+
+              <p className="text-sm sm:text-base text-zinc-300 mb-6 leading-relaxed font-sans">
+                {activeModalProject.longDescription}
+              </p>
+
+              <div className="mb-6">
+                <h4 className="font-mono text-xs text-zinc-400 uppercase tracking-wider mb-3">
+                  Technical Architecture Highlights:
+                </h4>
+                <div className="space-y-2.5">
+                  {activeModalProject.features.map((feat, idx) => (
+                    <div key={idx} className="flex items-center gap-2.5 text-xs sm:text-sm text-zinc-200">
+                      <Check className="w-4 h-4 text-amber-500 shrink-0" />
+                      <span>{feat}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2 mb-8">
+                {activeModalProject.tags.map((t) => (
+                  <span
+                    key={t}
+                    className="font-mono text-[10px] text-zinc-300 bg-zinc-900 border border-zinc-800 px-3 py-1 rounded"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+
+              <button
+                onClick={() => setActiveModalProject(null)}
+                className="w-full bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold font-mono text-xs uppercase tracking-wider py-3.5 rounded-xl transition-colors"
+              >
+                Close Architecture View
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
